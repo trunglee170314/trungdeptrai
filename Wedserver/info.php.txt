@@ -1,0 +1,112 @@
+
+<html>
+
+<head>
+    <link rel = "stylesheet" type = "text/css" href = "design.css"/>
+    <title>Temperature monitoring project</title>
+<body>
+    <h1 style="font-size :70px;text-align: center;color: rgb(44,95,238)">Temperature monitoring</h1>
+    <div id="tieude">
+        <div style="font-size: 100px;">
+        <div id="chart_div" style="width: 900px; height: 500px;"></div>
+        </div>
+        <div id="mb1">
+            <div id="ten" style="color: red ">
+                <h2>
+                    Giáo Viên Hướng Dẫn: Bùi Hà Đức
+                </h2>
+            </div>
+            <div> 
+                <h3>
+                    Sinh Viên Thực Hiện: Trần Cao Thiên
+                </h3>
+            </div>
+            <form  method="post" action="<?php echo $_SERVER['PHP_SELF']?>">
+                    Input Temperature<br>
+                <input type="text" name="temp" placeholder="Input temperature"><br>
+                <input type="submit"name="sb" value="submit">
+                <?php
+                $con = mysqli_connect("localhost", "username", "123", "temp_database") or die("lỗi kết nối");
+                    if( isset($_POST['sb']))
+                    {                
+                        $nhietdo=$_POST['temp']; 
+                        $sql="INSERT INTO `input_temp`(`temp`) VALUES ('".$nhietdo."')";
+                        $query=mysqli_query($con,$sql)  or die("Connect failed");
+                        echo'<script type="text/javascript">alert("Successfully add temperature") </script> ';
+                    }
+                ?>
+            </form>
+        </div>
+    </div>
+   
+</body>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<script type="text/javascript">
+
+google.load("visualization", "1", {packages:["corechart"]});
+
+google.setOnLoadCallback(drawChart);
+
+function drawChart() {
+
+var data = google.visualization.arrayToDataTable([
+
+['Time', 'Temperature'],
+
+<?php
+
+$con = mysqli_connect("localhost", "username", "123", "temp_database");
+
+ 
+
+$query = "SELECT * FROM tempLog ORDER BY id DESC LIMIT 5";
+
+$result = mysqli_query($con, $query);
+
+ 
+
+mysqli_close($con);
+
+ 
+
+while ($row = mysqli_fetch_array($result))
+
+{
+
+$time = $row['datetime'];
+
+$temp = $row['temperature'];
+
+echo "['$time', $temp],";
+
+}
+
+?>
+
+]);
+
+ 
+
+var options = {
+
+title: 'Temperature',
+
+vAxis: { title: "C Degree" }
+
+};
+
+ 
+
+var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+chart.draw(data, options);
+
+}
+
+</script>
+
+</head>
+
+</html>
+

@@ -1,0 +1,13 @@
+#tieude {
+    display: flex;
+    margin-left: 220px;
+}
+
+#nhietdo {
+    margin-top: 50px;
+	margin-left: 500px;
+}
+
+#tg {
+    margin-top: 20px;
+}
